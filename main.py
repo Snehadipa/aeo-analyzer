@@ -41,10 +41,14 @@ async def startup_event():
         print("ERROR: OPENAI_API_KEY not set!")
         raise ValueError("OPENAI_API_KEY environment variable is not set")
     try:
-        client = OpenAI(api_key=api_key)
+        # Initialize with longer timeout for Railway deployment
+        client = OpenAI(api_key=api_key, timeout=30.0)
         print("✅ OpenAI client initialized successfully")
+        print(f"✅ API Key loaded: {api_key[:10]}...")
     except Exception as e:
         print(f"ERROR initializing OpenAI client: {e}")
+        import traceback
+        traceback.print_exc()
         raise
 
 
@@ -95,7 +99,8 @@ Audio-Technica ATH-M50x"""
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.7,
-            max_tokens=500
+            max_tokens=500,
+            timeout=25.0
         )
         
         content = response.choices[0].message.content
