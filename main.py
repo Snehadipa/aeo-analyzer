@@ -36,7 +36,16 @@ client = None
 @app.on_event("startup")
 async def startup_event():
     global client
-    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        print("ERROR: OPENAI_API_KEY not set!")
+        raise ValueError("OPENAI_API_KEY environment variable is not set")
+    try:
+        client = OpenAI(api_key=api_key)
+        print("✅ OpenAI client initialized successfully")
+    except Exception as e:
+        print(f"ERROR initializing OpenAI client: {e}")
+        raise
 
 
 # Request model
@@ -176,10 +185,17 @@ async def analyze_product(request: AnalyzeRequest):
         if not request.product_name or not request.product_name.strip():
             raise HTTPException(status_code=400, detail="Product name cannot be empty")
         
-        analysis = analyze_with_structure(
-            request.query.strip(),
-            request.product_name.strip()
-        )
+        try:
+            analysis = analyze_with_structure(
+                request.query.strip(),
+                request.product_name.strip()
+            )
+        except Exception as e:
+            print(f"ERROR in analyze_with_structure: {str(e)}")
+            print(f"Error type: {type(e).__name__}")
+            import traceback
+            traceback.print_exc()
+            raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
         
         ai_response = analysis["ai_response"]
         extracted_products = analysis["products"]
