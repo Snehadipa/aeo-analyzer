@@ -69,21 +69,26 @@ def analyze_with_structure(query: str, product_name: str) -> dict:
     Ask OpenAI for the answer and product analysis.
     Simple version without structured JSON output.
     """
-    prompt = f"""You are an AI product analysis assistant. Answer this query with product recommendations.
+    prompt = f"""You are an AI shopping assistant. For the given query, provide detailed recommendations with specific branded product names.
 
 Query: {query}
 
-Return your response in this format:
-1. First, give your recommendation (2-3 sentences)
-2. Then list specific product names you mentioned, one per line, starting with "PRODUCTS:"
+INSTRUCTIONS:
+1. Answer the query with 2-3 sentences of recommendations
+2. Mention AT LEAST 5-7 specific branded products (include model numbers when relevant)
+3. Format your recommendations as a natural paragraph
+4. After your answer, list all products mentioned, one per line, after "PRODUCTS:"
 
-Example:
-For budget wireless headphones, I recommend Anker products for value or Sony for premium features.
+Example format:
+For budget headphones, I recommend JBL Tune 500BT for comfort, Anker Soundcore Q20 for value, Sony WH-CH720N for noise cancelling, Beats Studio Pro for brand trust, Sennheiser Momentum 3 for quality, and Audio-Technica ATH-M50x for professionals.
 
 PRODUCTS:
-Anker Soundcore Life Q20
-Sony WH-1000XM5
-JBL Tune 500BT"""
+JBL Tune 500BT
+Anker Soundcore Q20
+Sony WH-CH720N
+Beats Studio Pro
+Sennheiser Momentum 3
+Audio-Technica ATH-M50x"""
 
     try:
         response = client.chat.completions.create(
