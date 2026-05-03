@@ -154,6 +154,15 @@ def calculate_visibility_score(
     return score
 
 
+@app.get("/health")
+async def health_check():
+    """Health check endpoint"""
+    return {
+        "status": "ok",
+        "client_initialized": client is not None
+    }
+
+
 @app.post("/analyze", response_model=AnalyzeResponse)
 async def analyze_product(request: AnalyzeRequest):
     """
@@ -167,6 +176,10 @@ async def analyze_product(request: AnalyzeRequest):
         JSON with AI response, extracted products, and visibility analysis
     """
     try:
+        # Check if client is initialized
+        if client is None:
+            raise HTTPException(status_code=500, detail="OpenAI client not initialized. Check OPENAI_API_KEY.")
+        
         # Validate inputs
         if not request.query or not request.query.strip():
             raise HTTPException(status_code=400, detail="Query cannot be empty")
@@ -216,6 +229,9 @@ async def analyze_product(request: AnalyzeRequest):
     except HTTPException:
         raise
     except Exception as e:
+        print(f"UNHANDLED ERROR: {e}")
+        import traceback
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
 
 
