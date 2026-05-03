@@ -66,80 +66,69 @@ class AnalyzeResponse(BaseModel):
 
 def analyze_with_structure(query: str, product_name: str) -> dict:
     """
-    Ask OpenAI for the answer and product visibility analysis in one structured JSON response.
+    Ask OpenAI for the answer and product analysis.
+    Simple version without structured JSON output.
     """
-    prompt = f"""
-You are an AI product analysis system.
-
-Given a user query and a product name, do the following:
-1. Answer the query with concise product recommendations.
-2. Extract ONLY specific branded product names (like "Sony WH-1000XM5", "Bang Energy").
- Do NOT include generic terms like "magnesium supplement" or "laptop".
-3. Check if the given product is present in that product list.
-4. Provide the 1-indexed position if found.
-
-Return ONLY valid JSON in this exact shape:
-
-{{
-    "ai_response": "...",
-    "products": ["Product A", "Product B"],
-    "found": true,
-    "position": 1
-}}
-
-Use false for "found" and null for "position" when the product is not present.
+    prompt = f"""You are an AI product analysis assistant. Answer this query with product recommendations.
 
 Query: {query}
-Product: {product_name}
-"""
 
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0,
-        max_tokens=1200,
-        response_format={"type": "json_object"},
-    )
+Return your response in this format:
+1. First, give your recommendation (2-3 sentences)
+2. Then list specific product names you mentioned, one per line, starting with "PRODUCTS:"
 
-    content = response.choices[0].message.content
-    if not content:
-        raise ValueError("OpenAI returned an empty response")
+Example:
+For budget wireless headphones, I recommend Anker products for value or Sony for premium features.
 
-    data = json.loads(content)
+PRODUCTS:
+Anker Soundcore Life Q20
+Sony WH-1000XM5
+JBL Tune 500BT"""
 
-    products = data.get("products", [])
-    if not isinstance(products, list):
+    try:
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.7,
+            max_tokens=500
+        )
+        
+        content = response.choices[0].message.content
+        if not content:
+            raise ValueError("OpenAI returned empty response")
+        
+        # Parse response
+        parts = content.split("PRODUCTS:")
+        ai_response = parts[0].strip() if parts else content
+        
         products = []
-
-    cleaned_products = []
-    seen = set()
-    for product in products:
-        if not isinstance(product, str):
-            continue
-
-        name = product.strip()
-        if not name:
-            continue
-
-        key = name.lower()
-        if key not in seen:
-            seen.add(key)
-            cleaned_products.append(name)
-
-    found = bool(data.get("found"))
-    position = data.get("position")
-    if not isinstance(position, int):
-        position = None
-
-    if not found:
-        position = None
-
-    return {
-        "ai_response": str(data.get("ai_response", "")),
-        "products": cleaned_products,
-        "found": found,
-        "position": position,
-    }
+        if len(parts) > 1:
+            product_lines = parts[1].strip().split('\n')
+            for line in product_lines:
+                line = line.strip()
+                if line and len(line) > 2:
+                    products.append(line)
+        
+        # Check if product is in the list
+        product_found = False
+        product_position = None
+        
+        product_lower = product_name.lower()
+        for idx, prod in enumerate(products, 1):
+            if product_lower in prod.lower() or prod.lower() in product_lower:
+                product_found = True
+                product_position = idx
+                break
+        
+        return {
+            "ai_response": ai_response,
+            "products": products,
+            "found": product_found,
+            "position": product_position,
+        }
+    except Exception as e:
+        print(f"ERROR in analyze_with_structure: {e}")
+        raise
 
 
 def calculate_visibility_score(
