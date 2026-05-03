@@ -41,10 +41,10 @@ async def startup_event():
         print("ERROR: OPENAI_API_KEY not set!")
         raise ValueError("OPENAI_API_KEY environment variable is not set")
     try:
-        # Initialize with longer timeout for Railway deployment
-        client = OpenAI(api_key=api_key, timeout=30.0)
+        # Initialize OpenAI client
+        client = OpenAI(api_key=api_key)
         print("✅ OpenAI client initialized successfully")
-        print(f"✅ API Key loaded: {api_key[:10]}...")
+        print(f"✅ API Key loaded: {api_key[:20]}...")
     except Exception as e:
         print(f"ERROR initializing OpenAI client: {e}")
         import traceback
@@ -95,13 +95,14 @@ Sennheiser Momentum 3
 Audio-Technica ATH-M50x"""
 
     try:
+        print(f"DEBUG: Starting API call for query: {query[:50]}...")
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.7,
-            max_tokens=500,
-            timeout=25.0
+            max_tokens=500
         )
+        print(f"DEBUG: API call successful, got response")
         
         content = response.choices[0].message.content
         if not content:
@@ -185,6 +186,7 @@ async def analyze_product(request: AnalyzeRequest):
     Returns:
         JSON with AI response, extracted products, and visibility analysis
     """
+    print(f"DEBUG: /analyze endpoint called with query='{request.query}', product='{request.product_name}'")
     try:
         # Check if client is initialized
         if client is None:
