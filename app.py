@@ -8,11 +8,12 @@ st.set_page_config(page_title="AI Product Analyzer", layout="wide")
 st.title("🔍 AI Product Visibility Analyzer")
 st.markdown("Check if your product appears in AI-generated recommendations")
 
-if not get_api_key():
-    st.warning("Set OPENAI_API_KEY in Streamlit secrets to enable analysis.")
-
 def get_api_key() -> str | None:
     return os.getenv("OPENAI_API_KEY") or st.secrets.get("OPENAI_API_KEY")
+
+
+if not get_api_key():
+    st.warning("Set OPENAI_API_KEY in Streamlit secrets to enable analysis.")
 
 
 def analyze_with_structure(query: str, product_name: str) -> dict:
