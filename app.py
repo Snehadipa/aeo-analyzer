@@ -174,19 +174,19 @@ if st.button("🔍 Analyze", use_container_width=True):
 # Sidebar info
 with st.sidebar:
     st.markdown("## 📋 Instructions")
-     st.markdown("""
-     1. **Enter a search query** - What would you ask AI?
+    st.markdown("""
+    1. **Enter a search query** - What would you ask AI?
 
-     2. **Enter your product name** - Which product to search for?
+    2. **Enter your product name** - Which product to search for?
 
-     3. **Click Analyze** - Get instant results!
+    3. **Click Analyze** - Get instant results!
 
-     ### 📊 What it shows:
-     - AI's response to your query
-     - All products it mentioned
-     - Whether your product was found
-     - Position ranking & visibility score
-     """)
+    ### 📊 What it shows:
+    - AI's response to your query
+    - All products it mentioned
+    - Whether your product was found
+    - Position ranking & visibility score
+    """)
     
     st.divider()
     st.markdown("### ⚙️ Settings")
