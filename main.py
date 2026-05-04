@@ -133,9 +133,9 @@ Audio-Technica ATH-M50x"""
         
         return {
             "ai_response": ai_response,
-            "products": products,
-            "found": product_found,
-            "position": product_position,
+            "extracted_products": products,
+            "product_found": product_found,
+            "product_position": product_position,
         }
     except Exception as e:
         print(f"ERROR in analyze_with_structure: {e}")
@@ -212,9 +212,9 @@ async def analyze_product(request: AnalyzeRequest):
             raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
         
         ai_response = analysis["ai_response"]
-        extracted_products = analysis["products"]
-        product_found = analysis["found"]
-        product_position = analysis["position"]
+        extracted_products = analysis["extracted_products"]
+        product_found = analysis["product_found"]
+        product_position = analysis["product_position"]
         
         # Calculate visibility score
         visibility_score = calculate_visibility_score(
@@ -245,12 +245,6 @@ async def analyze_product(request: AnalyzeRequest):
         import traceback
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
-
-
-@app.get("/health")
-async def health_check():
-    """Health check endpoint"""
-    return {"status": "healthy", "service": "AI Product Visibility Analyzer"}
 
 
 @app.get("/")
