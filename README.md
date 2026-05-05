@@ -1,6 +1,8 @@
-# AI Product Visibility Analyzer
+AI Product Visibility Analyzer — Measure Your Brand’s Presence in AI Recommendations
 
-A simple FastAPI backend tool that checks whether an Amazon seller's product appears in AI-generated responses (like ChatGPT) for customer queries.
+As users shift from Google search to AI assistants, product discovery is changing.
+
+This tool helps brands understand whether they appear in AI-generated answers — and how they rank.
 
 ## 🎯 Problem Solved
 
