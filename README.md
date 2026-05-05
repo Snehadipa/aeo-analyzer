@@ -1,4 +1,4 @@
-AI Product Visibility Analyzer — Measure Your Brand’s Presence in AI Recommendations
+# AI Product Visibility Analyzer — Measure Your Brand’s Presence in AI Recommendations
 
 As users shift from Google search to AI assistants, product discovery is changing.
 
