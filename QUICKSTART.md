@@ -2,6 +2,13 @@
 
 ## ⚡ 2-Minute Setup
 
+## 🌐 Live Demo (Public)
+
+The deployed Streamlit app is public by default. Anyone with the link can open it:
+https://aeo-analyzer-rohx8fucn2jduvhsd4abrd.streamlit.app/
+
+Avoid entering sensitive data.
+
 ### Step 1: Get OpenAI API Key (1 minute)
 1. Go to https://platform.openai.com/api-keys
 2. Sign in or create account

@@ -87,6 +87,11 @@ https://aeo-analyzer-backend.onrender.com
 https://your-username-aeo-analyzer.streamlit.app
 ```
 
+Streamlit apps are public by default. Anyone with the URL can open the app. Example:
+```
+https://aeo-analyzer-rohx8fucn2jduvhsd4abrd.streamlit.app/
+```
+
 ---
 
 ## 🎯 Demo to Recruiter

@@ -40,6 +40,18 @@ Response:
 }
 ```
 
+## 🔗 Repository
+
+Source code:
+https://github.com/Snehadipa/aeo-analyzer
+
+## 🌐 Live Demo (Public)
+
+The deployed Streamlit app is public by default. Anyone with the link can open it:
+https://aeo-analyzer-rohx8fucn2jduvhsd4abrd.streamlit.app/
+
+Avoid entering sensitive data.
+
 ## 🚀 Quick Start
 
 ### Prerequisites
